@@ -11,7 +11,7 @@ for (i in geos) {
     mutate(GEO_ID = as.character(GEO_ID))
 
   if (i != "us") {
-    df <- mutate(df, RESP_DATE = as.Date("RESP_DATE", format = "%m/%d/%Y"))
+    df <- mutate(df, RESP_DATE = as.Date(RESP_DATE, format = "%m/%d/%Y"))
   }
 
   if (i %in% c("nyc", "us")) {
