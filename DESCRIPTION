@@ -1,13 +1,13 @@
 Package: nyccensus
-Title: What the Package Does (One Line, Title Case)
+Title: NYC Census 2020
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Natalie",
+           family = "O'Shea",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "ms.natalieoshea@gmail.com",
+           comment = c(ORCID = "0000-0001-7061-2481"))
+Description: The nyccensus package is a simple data-sharing package meant to ease the pains of accessing and wrangling publicly-available response rate data from the 2020 Decennial Census as well as other relevant demographic data from the American Community Survey at various geographic levels in New York City.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
