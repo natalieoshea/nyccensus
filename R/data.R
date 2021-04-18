@@ -1,3 +1,129 @@
+# geojson data ----
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC assembly districts
+#'
+#' @format A sf data frame with 65 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{assembly district}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_assembly"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC boroughs
+#'
+#' @format A sf data frame with 5 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{borough}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_borough"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC community board districts
+#'
+#' @format A sf data frame with 71 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{community board district}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_commBoard"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC congressional districts
+#'
+#' @format A sf data frame with 13 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{congressional district}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_congressional"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC council districts
+#'
+#' @format A sf data frame with 51 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{council district}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_council"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC zip codes (modified zip code
+#'  tabulation areas)
+#'
+#' @format A sf data frame with 178 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{modzcta (modified zip code tabulation area)}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_modzcta"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC neighborhoods
+#'
+#' @format A sf data frame with 253 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{neighborhood code (nCode)}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_nCode"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC school districts
+#'
+#' @format A sf data frame with 32 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{school district}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_school"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC state senate districts
+#'
+#' @format A sf data frame with 26 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{state senate district}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_stateSenate"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC census tracts (2010 geography)
+#'
+#' @format A sf data frame with 2197 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{census tract (2010 geography)}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_tract_2010"
+
+#' Geographic Shapefile for NYC
+#'
+#' A dataset containing a simple features (sf) data frame of NYC census tracts (2020 geography)
+#'
+#' @format A sf data frame with 2197 rows and 2 variables
+#' \describe{
+#'   \item{GEO_ID}{census tract (2020 geography)}
+#'   \item{geometry}{multipolygon geometry}
+#' }
+"geo_tract_2020"
+
+# census 2020 data ----
+
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
 #' A dataset containing daily response rate data (March 20 to October 17) reported
@@ -13,7 +139,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"assembly"
+"rr_assembly"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -30,7 +156,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"borough"
+"rr_borough"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -47,7 +173,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"commBoard"
+"rr_commBoard"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -64,7 +190,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"congressional"
+"rr_congressional"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -81,7 +207,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"council"
+"rr_council"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -98,7 +224,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"modzcta"
+"rr_modzcta"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -117,7 +243,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"nCode"
+"rr_nCode"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -133,7 +259,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"nyc"
+"rr_nyc"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -150,7 +276,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"school"
+"rr_school"
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
@@ -167,7 +293,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"stateSenate"
+"rr_stateSenate"
 
 
 #' Daily Response Rate Data for the 2020 Census in New York City
@@ -188,7 +314,7 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"tract_2020"
+"rr_tract_2020"
 
 #' Daily Response Rate Data for the 2020 Census in the United States
 #'
@@ -204,4 +330,4 @@
 #'   \item{DRRALL}{daily response rate}
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
-"us"
+"rr_us"
