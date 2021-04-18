@@ -6,5 +6,7 @@ The nyccensus package is a simple data-sharing package meant to ease the pains o
 
 You can install the current verion of nyccensus from GitHub with:
 
+```
 # install.packages("devtools")
 devtools::install_github("natalieoshea/nyccensus")
+```
