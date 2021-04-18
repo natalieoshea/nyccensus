@@ -356,3 +356,125 @@
 #'   \item{DRRINT}{daily response rate (internet-only)}
 #' }
 "rr_us"
+
+# acs data ----
+
+#' American Community Survey Data for NYC Assembly Districts
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 65 rows and 162 variables
+"demos_assembly"
+
+#' American Community Survey Data for NYC Boroughs
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 5 rows and 162 variables
+"demos_borough"
+
+#' American Community Survey Data for NYC Community Board Districts
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 59 rows and 162 variables
+"demos_commBoard"
+
+#' American Community Survey Data for NYC Congressional Districts
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 13 rows and 162 variables
+"demos_congressional"
+
+#' American Community Survey Data for NYC Council Districts
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 51 rows and 162 variables
+"demos_council"
+
+#' American Community Survey Data for NYC Modified Zip Code Tabulation Areas
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 180 rows and 162 variables
+"demos_modzcta"
+
+#' American Community Survey Data for NYC Neighborhoods
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 252 rows and 164 variables
+"demos_nCode"
+
+#' American Community Survey Data for NYC School Districts
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 32 rows and 162 variables
+"demos_school"
+
+#' American Community Survey Data for NYC State Senate Districts
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 26 rows and 162 variables
+"demos_stateSenate"
+
+#' American Community Survey Data for NYC Census Tracts (2010 geography)
+#'
+#' A dataset containing demographic data from the American Community Survey.
+#'  Includes information on: total population, total housing units (rented vs. owned),
+#'  median age, median income, sex, poverty, SNAP recipients, age, race, household
+#'  type, marital status, education level, and language. All variables are from the
+#'  2019 ACS 5-yr estimates except language data, which is only available below the
+#'  county level through the 2015 ACS.
+#'
+#' @format A data frame with 2167 rows and 162 variables
+"demos_tract_2010"

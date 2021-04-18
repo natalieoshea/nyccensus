@@ -490,7 +490,8 @@ demos_tract_2010 <- acs_demos("tract")
 # add neighborhood name and boro to nCode dataframe
 demos_nCode <- crosswalk %>%
   select(borough, neighborhood, nCode) %>%
-  right_join(demos_nCode, by = "nCode")
+  right_join(demos_nCode, by = "nCode") %>%
+  unique()
 
 # write csvs
 write_csv(demos_modzcta, "data-raw/demos_modzcta.csv")
@@ -502,6 +503,7 @@ write_csv(demos_stateSenate, "data-raw/demos_stateSenate.csv")
 write_csv(demos_commBoard, "data-raw/demos_commBoard.csv")
 write_csv(demos_borough, "data-raw/demos_borough.csv")
 write_csv(demos_tract_2010, "data-raw/demos_tract_2010.csv")
+write_csv(demos_nCode, "data-raw/demos_nCode.csv")
 
 usethis::use_data(demos_assembly, demos_borough, demos_commBoard, demos_congressional, demos_council, demos_modzcta,
                   demos_nCode, demos_school, demos_stateSenate, demos_tract_2010, overwrite = TRUE)
