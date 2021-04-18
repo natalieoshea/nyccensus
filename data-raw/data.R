@@ -235,7 +235,7 @@ write_csv(acs_stateSenate, "data-raw/acs_stateSenate.csv")
 write_csv(acs_commBoard, "data-raw/acs_commBoard.csv")
 write_csv(acs_nCode, "data-raw/acs_nCode.csv")
 write_csv(acs_borough, "data-raw/acs_borough.csv")
-write_csv(acs_tract_2010, "data-raw/acs_tract_2010.csv")
+# write_csv(acs_tract_2010, "data-raw/acs_tract_2010.csv") # too large to store on GitHub
 
 # calculate demos
 
