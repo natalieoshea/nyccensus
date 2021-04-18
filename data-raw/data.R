@@ -3,7 +3,7 @@
 library(tidyverse)
 library(sf)
 
-# geojson data ----
+# geographic data ----
 
 geos <- c("assembly", "borough", "commBoard", "congressional", "council", "modzcta",
           "nCode", "school", "stateSenate", "tract_2020", "tract_2010")
@@ -18,7 +18,10 @@ for (i in geos) {
 list2env(data, envir=.GlobalEnv)
 rm(data, df, i, geos)
 
-usethis::use_data(geo_assembly, geo_borough, geo_commBoard, geo_congressional, geo_council, geo_modzcta,
+crosswalk_tract_2020 <- read_csv("data-raw/crosswalk_tract_2020.csv") %>%
+  mutate(across(where(is.numeric), as.character))
+
+usethis::use_data(crosswalk_tract_2020, geo_assembly, geo_borough, geo_commBoard, geo_congressional, geo_council, geo_modzcta,
                   geo_nCode, geo_school, geo_stateSenate, geo_tract_2020, geo_tract_2010, overwrite = TRUE)
 
 # response rate data ----

@@ -1,4 +1,29 @@
-# geojson data ----
+# geographic data ----
+
+#' Geographic Crosswalk for 2020 Census Tracts in NYC
+#'
+#' A dataset containing a crosswalk file listing the various geographies each
+#'  2020 census tract is assigned to in New York City
+#'
+#' @format A data frame with 2,312 rows and 15 variables
+#' \describe{
+#'   \item{tract_2020}{full census tract id (2020 geography)}
+#'   \item{GEOID10}{10-digit census tract id (2020 geography)}
+#'   \item{tract}{census tract (2020 geography)}
+#'   \item{tract_name}{census tract name (2020 geography)}
+#'   \item{borough }{borough}
+#'   \item{neighborhood}{neighborhood}
+#'   \item{nCode}{unique neighborhood code}
+#'   \item{congressional}{congressional district}
+#'   \item{stateSenate}{state senate district}
+#'   \item{council}{city council district}
+#'   \item{assembly}{assembly district}
+#'   \item{school}{school district}
+#'   \item{commBoard}{community board district}
+#'   \item{zip}{zip code}
+#'   \item{modzcta}{modified zip code tabulation area}
+#' }
+"crosswalk_tract_2020"
 
 #' Geographic Shapefile for NYC
 #'
@@ -122,7 +147,7 @@
 #' }
 "geo_tract_2020"
 
-# census 2020 data ----
+# response rate data ----
 
 #' Daily Response Rate Data for the 2020 Census in New York City
 #'
