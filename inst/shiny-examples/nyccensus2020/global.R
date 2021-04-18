@@ -38,8 +38,7 @@ geo_stateSenate <- nyccensus::geo_stateSenate
 geo_modzcta <- nyccensus::geo_modzcta
 
 # load crosswalk file
-# crosswalk_tracts2020 <- read_csv("data/crosswalk_tracts2020.csv") %>%
-#   mutate(across(where(is.numeric), as.character))
+crosswalk_tract_2020 <- nyccensus::crosswalk_tract_2020
 
 # transform data ----
 
