@@ -6,14 +6,14 @@ The `nyccensus` package is a simple data-sharing package meant to ease the pains
 
 You can install the current version of nyccensus from GitHub with:
 
-```
+``` r
 # install.packages("devtools")
 devtools::install_github("natalieoshea/nyccensus")
 ```
 
 # Example: bivariate map
 
-```
+``` r
 # install.packages("devtools", "tidyverse", "sf", "biscale")
 # install_github('Chrisjb/basemapR')
 devtools::install_github("natalieoshea/nyccensus")
@@ -53,7 +53,7 @@ ggplot() +
 
 ![bivariate map of New York City neighborhoods](https://github.com/natalieoshea/nyccensus/blob/master/man/figures/bivariate_map.png?raw=true)
 
-```
+``` r
 # bivariate legend
 bi_legend(pal = "DkBlue", dim = 3, size = 16,
           xlab = "Limited English (%)",
