@@ -51,7 +51,7 @@ ggplot() +
         panel.border = element_blank())
 ```
 
-![alt text](https://github.com/natalieoshea/nyccensus/blob/master/bivariate_map.png?raw=true)
+![bivariate map of New York City neighborhoods](https://github.com/natalieoshea/nyccensus/blob/master/man/figures/bivariate_legend.png?raw=true)
 
 ```
 # bivariate legend
@@ -61,4 +61,4 @@ bi_legend(pal = "DkBlue", dim = 3, size = 16,
 
 ```
 
-![alt text](https://github.com/natalieoshea/nyccensus/blob/master/bivariate_legend.png?raw=true)
+![bivariate map legend](https://github.com/natalieoshea/nyccensus/blob/master/man/figures/bivariate_legend.png?raw=true)
