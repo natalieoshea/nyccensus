@@ -54,11 +54,7 @@ rr_nCode <- rr_nCode %>%
 census_vars <- c("Cumulative Response Rate" = "CRRALL",
                  "Cumulative Response Rate (Internet)" = "CRRINT",
                  "Daily Response Rate" = "DRRALL",
-                 "Daily Response Rate (Internet)" = "DRRINT",
-                 "National Gap: Cumulative Response Rate" = "gap_us_CRRALL",
-                 "National Gap: Cumulative Response Rate (Internet)" = "gap_us_CRRINT",
-                 "NYC Gap: Cumulative Response Rate" = "gap_nyc_CRRALL",
-                 "NYC Gap: Cumulative Response Rate (Internet)" = "gap_nyc_CRRINT")
+                 "Daily Response Rate (Internet)" = "DRRINT")
 
 # save census geos
 census_geos <- c("Neighborhood" = "nCode",
@@ -71,3 +67,4 @@ census_geos <- c("Neighborhood" = "nCode",
                  "School District" = "school",
                  "Community Board District" = "commBoard",
                  "Zip Code" = "modzcta")
+
