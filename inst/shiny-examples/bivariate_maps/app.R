@@ -71,3 +71,6 @@ server <- function(input, output, session) {
   })
 
 }
+
+# run ----
+shinyApp(ui = ui, server = server)
