@@ -10,13 +10,20 @@ You can install the current version of nyccensus from GitHub with:
 # install.packages("devtools")
 devtools::install_github("natalieoshea/nyccensus")
 ```
+# Example: run shiny examples
 
+``` r
+# nyccensus2020 map
+nyccensus::runExample("nyccensus2020")
+
+# bivariate maps
+nyccensus::runExample("bivariate_maps")
+```
 # Example: bivariate map
 
 ``` r
 # install.packages("devtools", "tidyverse", "sf", "biscale")
 # install_github('Chrisjb/basemapR')
-devtools::install_github("natalieoshea/nyccensus")
 
 # load libraries
 library(tidyverse)
