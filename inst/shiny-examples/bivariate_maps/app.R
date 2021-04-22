@@ -32,7 +32,8 @@ ui <- fluidPage(
 
     mainPanel(
 
-      plotOutput("map")
+      plotOutput("map"),
+      plotOutput("legend")
 
     )
   )
@@ -68,6 +69,13 @@ server <- function(input, output, session) {
             axis.title = element_blank(),
             panel.grid = element_blank(),
             panel.border = element_blank())
+  })
+
+  output$legend <- renderPlot({
+    # bivariate legend
+    bi_legend(pal = "DkBlue", dim = 3, size = 16,
+              xlab = "X Variable",
+              ylab = "Y Variable")
   })
 
 }
