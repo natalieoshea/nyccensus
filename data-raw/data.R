@@ -221,7 +221,9 @@ acs_stateSenate <- acs_totals(stateSenate)
 acs_commBoard <- acs_totals(commBoard)
 acs_nCode <- acs_totals(nCode)
 acs_borough <- acs_totals(borough)
-acs_tract_2010 <- acs_totals(GEOID10) %>% rename(tract = GEOID10)
+acs_tract_2010 <- acs_totals(GEOID10) %>%
+  rename(tract_2010 = GEOID10) %>%
+  mutate(tract_2010 = paste0("1400000US", tract_2010))
 
 # export raw data
 
@@ -472,7 +474,8 @@ acs_demos <- function(geography){
                                                                           Occupation_Female_Natural_Resources_Construction_And_Maintenance_Occupations, na.rm = TRUE),
               Occupation_ProductionTransportationAndMaterialMoving = sum(Occupation_Male_Production_Transportation_And_Material_Moving_Occupations,
                                                                          Occupation_Female_Production_Transportation_And_Material_Moving_Occupations, na.rm = TRUE)) %>%
-    ungroup()
+    ungroup() %>%
+    rename(GEO_ID = !!as.name(geography))
 }
 
 # calculate totals for desired geographies
@@ -485,13 +488,14 @@ demos_stateSenate <- acs_demos("stateSenate")
 demos_commBoard <- acs_demos("commBoard")
 demos_nCode <- acs_demos("nCode")
 demos_borough <- acs_demos("borough")
-demos_tract_2010 <- acs_demos("tract")
+demos_tract_2010 <- acs_demos("tract_2010")
 
 # add neighborhood name and boro to nCode dataframe
 demos_nCode <- crosswalk %>%
   select(borough, neighborhood, nCode) %>%
-  right_join(demos_nCode, by = "nCode") %>%
-  unique()
+  right_join(demos_nCode, by = c("nCode" = "GEO_ID")) %>%
+  unique() %>%
+  rename(GEO_ID = nCode)
 
 # write csvs
 write_csv(demos_modzcta, "data-raw/demos_modzcta.csv")
