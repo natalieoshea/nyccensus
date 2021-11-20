@@ -2,7 +2,7 @@ input[type="number"] {
   max-width: 80%;
 }
 
-div.outer {
+.outer {
   position: fixed;
   top: 56px;
   left: 0;

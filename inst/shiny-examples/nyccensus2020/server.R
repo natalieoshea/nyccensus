@@ -1,5 +1,7 @@
 function(input, output, session) {
 
+  # Map ----
+
   map_df <- reactive({
     get(paste0("geo_", input$geo)) %>%
       left_join(get(paste0("rr_", input$geo))) %>%
@@ -37,6 +39,17 @@ function(input, output, session) {
         title = "",
         "bottomright"
       )
+  })
+
+  # Data table ----
+
+  output$data_table <- DT::renderDataTable({
+    map_df() %>%
+      DT::datatable(rownames = FALSE, extensions = "Buttons",
+                    options = list(dom = "Blrtip",
+                                   buttons = c("copy", "csv", "pdf"),
+                                   lengthMenu = list(c(10, 25, 50, -1),
+                                                     c(10, 25, 50, "All"))))
   })
 
 }

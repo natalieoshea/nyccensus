@@ -29,6 +29,33 @@ navbarPage("NYC Census 2020",
 
                )
              )
+           ),
+
+           # Data Explorer ----
+
+           tabPanel(
+             "Data Explorer",
+             fluidRow(
+               column(
+                 3,
+                 selectInput("geo2", "Geography", census_geos)
+               ),
+               column(
+                 3,
+                 dateRangeInput("dateRange", "Response Date",
+                                start = max(rr_tract_2020$RESP_DATE), end = max(rr_tract_2020$RESP_DATE),
+                                min = min(rr_tract_2020$RESP_DATE), max = max(rr_tract_2020$RESP_DATE))
+               ),
+               column(
+                 3,
+                 selectInput("boro", "Borough",
+                             c("All boroughs" = "", c("Bronx","Brooklyn","Manhattan","Queens","Staten Island")),
+                             multiple = TRUE)
+               )
+             ),
+
+             hr(),
+             DT::dataTableOutput("data_table")
            )
 
 )
