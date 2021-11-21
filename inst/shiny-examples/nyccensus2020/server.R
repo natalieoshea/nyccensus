@@ -62,9 +62,16 @@ function(input, output, session) {
 
   # print input$map_shape_click info
   observeEvent(input$map_shape_click, {
-    p <- input$map_shape_click
-    print(p)
+    map_shape_click <- input$map_shape_click
+    print(map_shape_click)
   })
+
+  # print input$map_shape_click info
+  observeEvent(input$map_click, {
+    map_click <- input$map_click
+    print(map_click)
+  })
+
 
   # Data table ----
 
