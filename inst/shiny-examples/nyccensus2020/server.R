@@ -66,12 +66,16 @@ function(input, output, session) {
     print(map_shape_click)
   })
 
-  # print input$map_shape_click info
+  # print input$map_click info
   observeEvent(input$map_click, {
     map_click <- input$map_click
     print(map_click)
   })
 
+  # pair programming steps:
+  # convert to leafletProxy for compatibility with
+  # store map_shape_click ID
+  # add polylines to leafletProxy object
 
   # Data table ----
 
