@@ -73,9 +73,9 @@ function(input, output, session) {
   })
 
   # pair programming steps:
-  # convert to leafletProxy for compatibility with
-  # store map_shape_click ID
-  # add polylines to leafletProxy object
+  # convert map to leafletProxy for better compatibility with Shiny reactivity
+  # store map_shape_click ID as a reactive value
+  # add highlighted polylines to leafletProxy object
 
   # Data table ----
 
