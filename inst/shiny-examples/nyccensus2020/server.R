@@ -44,6 +44,7 @@ function(input, output, session) {
       ) %>%
       addPolygons(
         data = map_df(),
+        layerId = ~GEO_ID,
         color = ~pal(var),
         fillOpacity = 0.7,
         smoothFactor = 0,
@@ -57,6 +58,12 @@ function(input, output, session) {
         title = "",
         "bottomright"
       )
+  })
+
+  # print input$map_shape_click info
+  observeEvent(input$map_shape_click, {
+    p <- input$map_shape_click
+    print(p)
   })
 
   # Data table ----
