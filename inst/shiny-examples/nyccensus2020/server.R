@@ -13,6 +13,7 @@ function(input, output, session) {
     updateSelectInput(session, "geo", selected = geo_table)
   })
 
+  # save census data from selected geography
   census_data <- reactive({
     get(paste0("rr_", input$geo))
   })
