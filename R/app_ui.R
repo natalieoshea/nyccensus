@@ -9,9 +9,18 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
-      h1("nyccensus")
-    )
+    # fluidPage(
+    #   h1("A Data Table"),
+    #   mod_datatable_ui("datatable_ui_1")
+    # )
+    navbarPage("NYC Census 2020",
+               id = "nav",
+               tabPanel("Map"),
+               tabPanel("Data Explorer",
+                        h1("A Data Table"),
+                        mod_datatable_ui("datatable_ui_1")
+                        )
+               )
   )
 }
 

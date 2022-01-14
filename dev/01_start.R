@@ -51,8 +51,8 @@ golem::use_recommended_deps()
 
 ## Favicon ----
 # If you want to change the favicon (default is golem's one)
-golem::use_favicon("https://www1.nyc.gov/assets/census/images/content/header/logo.png") # path = "path/to/ico". Can be an online file.
-# golem::remove_favicon()
+golem::use_favicon("https://www.kindpng.com/picc/m/159-1591284_new-york-city-official-logo-hd-png-download.png") # path = "path/to/ico". Can be an online file.
+#golem::remove_favicon()
 
 ## Add helper functions ----
 golem::use_utils_ui()
