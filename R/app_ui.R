@@ -16,7 +16,14 @@ app_ui <- function(request) {
     navbarPage("NYC Census 2020",
                id = "nav",
                tabPanel("Map",
-                        mod_map_ui("map_ui_1")
+                        div(
+                          #tags$head(includeCSS("inst/app/www/custom.css")),
+                          # tags$link(rel = "stylesheet",
+                          #           type = "text/css",
+                          #           href = "www/custom.css"),
+                          class = "outer",
+                          mod_map_ui("map_ui_1")
+                          )
                         ),
                tabPanel("Data Explorer",
                         h1("A Data Table"),
@@ -42,12 +49,13 @@ golem_add_external_resources <- function(){
 
   tags$head(
     favicon(ext = 'png'),
+    # add link to CSS style sheet
+    tags$link(rel = "stylesheet", type = "text/css", href = "www/custom.css"),
     bundle_resources(
       path = app_sys('app/www'),
       app_title = 'nyccensus'
     )
-    # Add here other external resources
-    # for example, you can add shinyalert::useShinyalert()
   )
+
 }
 

@@ -1,0 +1,24 @@
+input[type="number"] {
+  max-width: 80%;
+}
+
+.outer {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding: 0;
+}
+/* Customize fonts */
+  body, label, input, button, select {
+    font-family: 'Helvetica Neue', Helvetica;
+    font-weight: 200;
+  }
+h1, h2, h3, h4 { font-weight: 400; }
+
+#controls {
+  background-color: white;
+  padding: 0 10px 10px 10px;
+}
