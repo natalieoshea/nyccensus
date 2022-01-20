@@ -42,6 +42,8 @@ function(input, output, session) {
     var <- map_df()[[input$var]]
 
     leafletProxy("map", data = map_df()) %>%
+      clearShapes() %>%
+      clearControls() %>%
       addPolylines(
         data = map_df(),
         weight = 1,
