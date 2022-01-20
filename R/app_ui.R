@@ -15,7 +15,9 @@ app_ui <- function(request) {
     # )
     navbarPage("NYC Census 2020",
                id = "nav",
-               tabPanel("Map"),
+               tabPanel("Map",
+                        mod_map_ui("map_ui_1")
+                        ),
                tabPanel("Data Explorer",
                         h1("A Data Table"),
                         mod_datatable_ui("datatable_ui_1")

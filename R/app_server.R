@@ -6,5 +6,6 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic
+  mod_map_server("map_ui_1")
   mod_datatable_server("datatable_ui_1")
 }
