@@ -228,15 +228,15 @@ acs_tract_2010 <- acs_totals(GEOID10) %>%
 # export raw data
 
 # write csvs
-write_csv(acs_modzcta, "data-raw/acs_modzcta.csv")
-write_csv(acs_congressional, "data-raw/acs_congressional.csv")
-write_csv(acs_school, "data-raw/acs_school.csv")
-write_csv(acs_council, "data-raw/acs_council.csv")
-write_csv(acs_assembly, "data-raw/acs_assembly.csv")
-write_csv(acs_stateSenate, "data-raw/acs_stateSenate.csv")
-write_csv(acs_commBoard, "data-raw/acs_commBoard.csv")
-write_csv(acs_nCode, "data-raw/acs_nCode.csv")
-write_csv(acs_borough, "data-raw/acs_borough.csv")
+# write_csv(acs_modzcta, "data-raw/acs_modzcta.csv")
+# write_csv(acs_congressional, "data-raw/acs_congressional.csv")
+# write_csv(acs_school, "data-raw/acs_school.csv")
+# write_csv(acs_council, "data-raw/acs_council.csv")
+# write_csv(acs_assembly, "data-raw/acs_assembly.csv")
+# write_csv(acs_stateSenate, "data-raw/acs_stateSenate.csv")
+# write_csv(acs_commBoard, "data-raw/acs_commBoard.csv")
+# write_csv(acs_nCode, "data-raw/acs_nCode.csv")
+# write_csv(acs_borough, "data-raw/acs_borough.csv")
 # write_csv(acs_tract_2010, "data-raw/acs_tract_2010.csv") # too large to store on GitHub
 
 # calculate demos
@@ -498,16 +498,16 @@ demos_nCode <- crosswalk %>%
   rename(GEO_ID = nCode)
 
 # write csvs
-write_csv(demos_modzcta, "data-raw/demos_modzcta.csv")
-write_csv(demos_congressional, "data-raw/demos_congressional.csv")
-write_csv(demos_school, "data-raw/demos_school.csv")
-write_csv(demos_council, "data-raw/demos_council.csv")
-write_csv(demos_assembly, "data-raw/demos_assembly.csv")
-write_csv(demos_stateSenate, "data-raw/demos_stateSenate.csv")
-write_csv(demos_commBoard, "data-raw/demos_commBoard.csv")
-write_csv(demos_borough, "data-raw/demos_borough.csv")
-write_csv(demos_tract_2010, "data-raw/demos_tract_2010.csv")
-write_csv(demos_nCode, "data-raw/demos_nCode.csv")
+# write_csv(demos_modzcta, "data-raw/demos_modzcta.csv")
+# write_csv(demos_congressional, "data-raw/demos_congressional.csv")
+# write_csv(demos_school, "data-raw/demos_school.csv")
+# write_csv(demos_council, "data-raw/demos_council.csv")
+# write_csv(demos_assembly, "data-raw/demos_assembly.csv")
+# write_csv(demos_stateSenate, "data-raw/demos_stateSenate.csv")
+# write_csv(demos_commBoard, "data-raw/demos_commBoard.csv")
+# write_csv(demos_borough, "data-raw/demos_borough.csv")
+# write_csv(demos_tract_2010, "data-raw/demos_tract_2010.csv")
+# write_csv(demos_nCode, "data-raw/demos_nCode.csv")
 
 usethis::use_data(demos_assembly, demos_borough, demos_commBoard, demos_congressional, demos_council, demos_modzcta,
                   demos_nCode, demos_school, demos_stateSenate, demos_tract_2010, overwrite = TRUE)
