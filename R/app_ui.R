@@ -17,16 +17,16 @@ app_ui <- function(request) {
                tabPanel("Map",
                         div(
                           class = "outer",
-                          mod_map_ui("map_ui_1"),
+                          mod_map_ui("map_map"),
                           absolutePanel(
                             id = "controls", class = "panel panel-default",
                             top = 75, left = 55, width = 250, fixed=TRUE,
                             draggable = TRUE, height = "auto",
 
                             h4("Response Rates"),
-                            mod_var_ui("var_ui_1"),
-                            mod_geo_ui("geo_ui_1"),
-                            mod_date_ui("date_ui_1")
+                            mod_var_ui("var_map"),
+                            mod_geo_ui("geo_map"),
+                            mod_date_ui("date_map")
 
                             )
                           )
@@ -36,12 +36,12 @@ app_ui <- function(request) {
 
                tabPanel("Data Explorer",
                         fluidRow(
-                          column(3, mod_geo_ui("geo_ui_2")),
-                          column(3, mod_dateRange_ui("dateRange_ui_1")),
-                          column(3, mod_boro_ui("boro_ui_1"))
+                          column(3, mod_geo_ui("geo_data")),
+                          column(3, mod_dateRange_ui("dateRange_data")),
+                          column(3, mod_boro_ui("boro_data"))
                         ),
                         hr(),
-                        mod_datatable_ui("datatable_ui_1")
+                        mod_datatable_ui("datatable_data")
                         )
                )
   )
