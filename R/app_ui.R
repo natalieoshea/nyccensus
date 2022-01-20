@@ -6,27 +6,41 @@
 #' @noRd
 app_ui <- function(request) {
   tagList(
-    # Leave this function for adding external resources
+    # add external resources
     golem_add_external_resources(),
-    # Your application UI logic
-    # fluidPage(
-    #   h1("A Data Table"),
-    #   mod_datatable_ui("datatable_ui_1")
-    # )
+    # app UI logic
     navbarPage("NYC Census 2020",
                id = "nav",
+
+               # Map ----
+
                tabPanel("Map",
                         div(
-                          #tags$head(includeCSS("inst/app/www/custom.css")),
-                          # tags$link(rel = "stylesheet",
-                          #           type = "text/css",
-                          #           href = "www/custom.css"),
                           class = "outer",
-                          mod_map_ui("map_ui_1")
+                          mod_map_ui("map_ui_1"),
+                          absolutePanel(
+                            id = "controls", class = "panel panel-default",
+                            top = 75, left = 55, width = 250, fixed=TRUE,
+                            draggable = TRUE, height = "auto",
+
+                            h4("Response Rates"),
+                            mod_var_ui("var_ui_1"),
+                            mod_geo_ui("geo_ui_1"),
+                            mod_date_ui("date_ui_1")
+
+                            )
                           )
                         ),
+
+               # Data Explorer ----
+
                tabPanel("Data Explorer",
-                        h1("A Data Table"),
+                        fluidRow(
+                          column(3, mod_geo_ui("geo_ui_2")),
+                          column(3, mod_dateRange_ui("dateRange_ui_1")),
+                          column(3, mod_boro_ui("boro_ui_1"))
+                        ),
+                        hr(),
                         mod_datatable_ui("datatable_ui_1")
                         )
                )
