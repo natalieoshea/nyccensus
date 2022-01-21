@@ -31,7 +31,7 @@ app_ui <- function(request) {
                           ),
                           mainPanel(
                             mod_map_ui("map_map")
-                          )
+                          ),
                         )
                       ),
 
