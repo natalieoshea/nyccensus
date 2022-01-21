@@ -26,7 +26,18 @@ app_ui <- function(request) {
                             h4("Response Rates"),
                             mod_var_ui("var_map"),
                             mod_geo_ui("geo_map"),
-                            mod_date_ui("date_map")
+                            mod_date_ui("date_map"),
+
+                            hr(),
+
+                            h3("Sidebar", align = "center"),
+
+                            tabsetPanel(
+                              tabPanel("Overview"),
+                              tabPanel("Time Series"),
+                              tabPanel("Languages"),
+                              tabPanel("Demographics")
+                            )
 
                             )
                           )
