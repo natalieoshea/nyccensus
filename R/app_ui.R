@@ -13,38 +13,29 @@ app_ui <- function(request) {
                id = "nav",
 
                # Map ----
-
                tabPanel("Map",
-                        div(
-                          class = "outer",
-                          mod_map_ui("map_map"),
-                          absolutePanel(
-                            id = "controls", class = "panel panel-default",
-                            top = 75, left = 55, width = 250, fixed=TRUE,
-                            draggable = TRUE, height = "auto",
-
+                        sidebarLayout(
+                          sidebarPanel(
                             h4("Response Rates"),
                             mod_var_ui("var_map"),
                             mod_geo_ui("geo_map"),
                             mod_date_ui("date_map"),
-
                             hr(),
-
-                            h3("Sidebar", align = "center"),
-
+                            h4("Sidebar", align = "center"),
                             tabsetPanel(
                               tabPanel("Overview"),
                               tabPanel("Time Series"),
                               tabPanel("Languages"),
                               tabPanel("Demographics")
                             )
-
-                            )
+                          ),
+                          mainPanel(
+                            mod_map_ui("map_map")
                           )
-                        ),
+                        )
+                      ),
 
                # Data Explorer ----
-
                tabPanel("Data Explorer",
                         fluidRow(
                           column(3, mod_geo_ui("geo_data")),

@@ -10,7 +10,7 @@
 mod_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    leaflet::leafletOutput(ns("map"), width = "100%", height = "100%")
+    leaflet::leafletOutput(ns("map"))
   )
 }
 
