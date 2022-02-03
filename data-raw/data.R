@@ -37,28 +37,19 @@ library(sf)
 geos <- c("assembly", "borough", "commBoard", "congressional", "council", "modzcta",
           "nCode", "school", "stateSenate", "tract_2020", "tract_2010")
 
-data <- list()
-for (i in geos) {
-  df <- st_read(paste0("data-raw/geo_", i, ".geojson")) %>%
-    mutate(GEO_ID = as.character(GEO_ID))
-
-  data[[paste0("geo_", i)]] <- df
-}
-list2env(data, envir=.GlobalEnv)
-rm(data, df, i, geos)
+geo_data <- geos %>%
+  set_names() %>%
+  map(~ st_read(paste0("data-raw/geo_", ., ".geojson")) %>%
+        mutate(GEO_ID = as.character(GEO_ID)))
 
 crosswalk_tract_2020 <- read_csv("data-raw/crosswalk_tract_2020.csv") %>%
   mutate(across(where(is.numeric), as.character))
 
-usethis::use_data(crosswalk_tract_2020, geo_assembly, geo_borough, geo_commBoard, geo_congressional, geo_council, geo_modzcta,
-                  geo_nCode, geo_school, geo_stateSenate, geo_tract_2020, geo_tract_2010, overwrite = TRUE)
+usethis::use_data(crosswalk_tract_2020, geo_data, overwrite = TRUE)
 
 # response rate data ----
 
-geos <- c("assembly", "borough", "commBoard", "congressional", "council", "modzcta",
-          "nCode", "nyc", "school", "stateSenate", "tract_2020", "us")
-
-data <- list()
+rr_data <- list()
 for (i in geos) {
   df <- read_csv(paste0("data-raw/rr_", i, ".csv")) %>%
     mutate(GEO_ID = as.character(GEO_ID))
@@ -75,13 +66,11 @@ for (i in geos) {
     df <- mutate(df, TRACT = as.character(TRACT))
   }
 
-  data[[paste0("rr_", i)]] <- df
+  rr_data[[paste0(i)]] <- df
 }
-list2env(data, envir=.GlobalEnv)
-rm(data, df, i, geos)
+rm(df, i)
 
-usethis::use_data(rr_assembly, rr_borough, rr_commBoard, rr_congressional, rr_council, rr_modzcta,
-                  rr_nCode, rr_nyc, rr_school, rr_stateSenate, rr_tract_2020, rr_us, overwrite = TRUE)
+usethis::use_data(rr_data, overwrite = TRUE)
 
 # acs data ----
 
@@ -96,7 +85,7 @@ nyc_counties <- c("Bronx","Kings","New York","Queens","Richmond")
 acs5_2019 <- load_variables(2019, "acs5", cache = TRUE) %>%
   filter(!str_detect(name, "B16001"))
 acs5_2015 <- load_variables(2015, "acs5", cache = TRUE) %>%
-  filter(str_detect(name, "B16001"))
+  filter(str_detect(name, "B16001")) # tract-level detailed language data only available until 2015
 acs5_vars <- bind_rows(acs5_2015, acs5_2019)
 
 # create vectors of tables names based on how they will be aggregated
@@ -224,20 +213,6 @@ acs_borough <- acs_totals(borough)
 acs_tract_2010 <- acs_totals(GEOID10) %>%
   rename(tract_2010 = GEOID10) %>%
   mutate(tract_2010 = paste0("1400000US", tract_2010))
-
-# export raw data
-
-# write csvs
-# write_csv(acs_modzcta, "data-raw/acs_modzcta.csv")
-# write_csv(acs_congressional, "data-raw/acs_congressional.csv")
-# write_csv(acs_school, "data-raw/acs_school.csv")
-# write_csv(acs_council, "data-raw/acs_council.csv")
-# write_csv(acs_assembly, "data-raw/acs_assembly.csv")
-# write_csv(acs_stateSenate, "data-raw/acs_stateSenate.csv")
-# write_csv(acs_commBoard, "data-raw/acs_commBoard.csv")
-# write_csv(acs_nCode, "data-raw/acs_nCode.csv")
-# write_csv(acs_borough, "data-raw/acs_borough.csv")
-# write_csv(acs_tract_2010, "data-raw/acs_tract_2010.csv") # too large to store on GitHub
 
 # calculate demos
 
@@ -497,17 +472,10 @@ demos_nCode <- crosswalk %>%
   unique() %>%
   rename(GEO_ID = nCode)
 
-# write csvs
-# write_csv(demos_modzcta, "data-raw/demos_modzcta.csv")
-# write_csv(demos_congressional, "data-raw/demos_congressional.csv")
-# write_csv(demos_school, "data-raw/demos_school.csv")
-# write_csv(demos_council, "data-raw/demos_council.csv")
-# write_csv(demos_assembly, "data-raw/demos_assembly.csv")
-# write_csv(demos_stateSenate, "data-raw/demos_stateSenate.csv")
-# write_csv(demos_commBoard, "data-raw/demos_commBoard.csv")
-# write_csv(demos_borough, "data-raw/demos_borough.csv")
-# write_csv(demos_tract_2010, "data-raw/demos_tract_2010.csv")
-# write_csv(demos_nCode, "data-raw/demos_nCode.csv")
+# merge data into a single list and set names
+demos_data <- list(demos_assembly, demos_borough, demos_commBoard, demos_congressional, demos_council, demos_modzcta,
+                   demos_nCode, demos_school, demos_stateSenate, demos_tract_2010)
+names(demos_data) <- c("assembly", "borough", "commBoard", "congressional", "council", "modzcta",
+                       "nCode", "school", "stateSenate", "tract_2010")
 
-usethis::use_data(demos_assembly, demos_borough, demos_commBoard, demos_congressional, demos_council, demos_modzcta,
-                  demos_nCode, demos_school, demos_stateSenate, demos_tract_2010, overwrite = TRUE)
+usethis::use_data(demos_data, overwrite = TRUE)
