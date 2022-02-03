@@ -1,7 +1,7 @@
 Package: nyccensus
 Title: NYC Census 2020
 Version: 0.0.0.9000
-Authors@R: person('Natalie', 'O'Shea', email = 'ms.natalieoshea@gmail.com', role = c('cre', 'aut'))
+Authors@R: person("Natalie", "O'Shea", email = "ms.natalieoshea@gmail.com", role = c("cre", "aut"))
 Description: A simple data-sharing package meant to ease the pains of accessing and wrangling publicly-available response rate data from the 2020 Decennial Census as well as other relevant demographic data from the American Community Survey at various geographic levels in New York City.
 License: MIT + file LICENSE
 Imports: 

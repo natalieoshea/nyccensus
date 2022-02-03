@@ -7,6 +7,8 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @import leaflet
+#' @import dplyr
 mod_map_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -21,14 +23,119 @@ mod_map_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    # save census data from selected geography
+    census_data <- reactive({
+      req(input$geo)
+      rr_data[[input$geo]]
+    })
+
+    # create mapping data frame
+    map_df <- reactive({
+      req(input$geo)
+      req(input$date)
+      geo_data[[input$geo]] %>%
+        left_join(census_data()) %>%
+        filter(RESP_DATE == input$date)
+    })
+
     # set base map
     output$map <-  leaflet::renderLeaflet({
-      leaflet::leaflet(options = leaflet::leafletOptions(zoomControl = FALSE)) %>%
-        leaflet::addProviderTiles(
+      leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
+        addProviderTiles(
           provider = "CartoDB.Positron",
-          options = leaflet::providerTileOptions(minZoom = 10, maxZoom = 20)
+          options = providerTileOptions(minZoom = 10, maxZoom = 20)
         ) %>%
-        leaflet::setView(lng = -74.05, lat = 40.71, zoom = 11)
+        setView(lng = -74.05, lat = 40.71, zoom = 11)
+    })
+
+    # add colors to polygons
+    observe({
+      pal <- colorNumeric("viridis", map_df()[[input$var]])
+      var <- map_df()[[input$var]]
+
+      leaflet::leafletProxy("map", data = map_df()) %>%
+        clearShapes() %>%
+        clearControls() %>%
+        addPolylines(
+          data = map_df(),
+          weight = 1,
+          color = "grey"
+        ) %>%
+        addPolygons(
+          data = map_df(),
+          layerId = ~GEO_ID,
+          color = ~pal(var),
+          fillOpacity = 0.7,
+          smoothFactor = 0,
+          stroke = FALSE
+        ) %>%
+        addLegend(
+          data = map_df(),
+          pal = pal,
+          values = ~var,
+          labFormat = labelFormat(suffix = "%"),
+          title = "",
+          "bottomright"
+        )
+    })
+
+    # print input$map_shape_click info
+    observeEvent(input$map_shape_click, {
+      map_shape_click <- input$map_shape_click
+      print(map_shape_click)
+    })
+
+    # print input$map_click info
+    observeEvent(input$map_click, {
+      map_click <- input$map_click
+      print(map_click)
+    })
+
+    # store map_shape_click ID as a reactive value
+    clickedShape <- reactiveVal(NA)
+
+    observeEvent(input$map_click, {
+      if (is.null(input$map_shape_click)) {
+        # if input#map_shape_click hasn't been initiated, set clickedShape() to NA
+        clickedShape(NA)
+      } else if (input$map_click$lat == input$map_shape_click$lat &
+                 input$map_click$lng == input$map_shape_click$lng) {
+        # save polygon value
+        val <- map_df() %>% filter(GEO_ID == input$map_shape_click$id) %>% pull("CRRALL")
+        # if value is NA, set clickedShape() to NA
+        ifelse(is.na(val), clickedShape(NA), clickedShape(input$map_shape_click$id))
+      } else {
+        # if user clicks outside a polygon, set clickedShape() to NA
+        clickedShape(NA)
+      }
+    })
+
+    # if user switches geographies, set clickedShape() to NA
+    observeEvent(input$geo, {
+      clickedShape(NA)
+    })
+
+    # highlight clickedShape() polygon
+    observeEvent(clickedShape(), {
+
+      if (!is.na(clickedShape())) {
+        # save clickedShape() geometry
+        clicked_polygon <- map_df()$geometry[map_df()$GEO_ID %in% clickedShape()]
+
+        # add highlight polylines
+        leaflet::leafletProxy("map") %>%
+          clearGroup("highlights") %>%
+          addPolylines(data = clicked_polygon,
+                       stroke = TRUE,
+                       weight = 5,
+                       color = "darkblue",
+                       group = "highlights")
+      } else {
+        # remove previously highlighted polylines
+        leaflet::leafletProxy("map") %>%
+          clearGroup("highlights")
+      }
+
     })
 
   })

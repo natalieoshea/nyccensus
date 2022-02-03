@@ -38,6 +38,8 @@
 #'  - school district (school)
 #'  - state senate district (stateSenate)
 #'  - census tracts (tract_2010 and tract_2020)
+#'  - New York City (nyc)
+#'  - Nationwide (us)
 #'
 #' @format A large list containing 11 elements representing different geographic levels. Each element contains a sf data frame with 2 variables:
 #' \describe{

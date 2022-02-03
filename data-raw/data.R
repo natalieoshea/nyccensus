@@ -50,8 +50,9 @@ usethis::use_data(crosswalk_tract_2020, geo_data, overwrite = TRUE)
 # response rate data ----
 
 rr_data <- list()
-for (i in geos) {
-  df <- read_csv(paste0("data-raw/rr_", i, ".csv")) %>%
+for (i in geos <- c("assembly", "borough", "commBoard", "congressional", "council", "modzcta",
+                    "nCode", "school", "stateSenate", "tract_2020", "nyc", "us")) {
+  df <- read_csv(paste0("data-raw/rr_", i, ".csv"), show_col_types = FALSE) %>%
     mutate(GEO_ID = as.character(GEO_ID))
 
   if (i != "us") {

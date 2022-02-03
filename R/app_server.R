@@ -4,7 +4,7 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @noRd
-app_server <- function( input, output, session ) {
+app_server <- function( input, output, session, global ) {
 
   # Map ----
   mod_var_server("var_map")

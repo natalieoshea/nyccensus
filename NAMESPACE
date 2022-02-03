@@ -2,6 +2,8 @@
 
 export("%>%")
 export(run_app)
+import(dplyr)
+import(leaflet)
 import(shiny)
 importFrom(golem,activate_js)
 importFrom(golem,add_resource_path)

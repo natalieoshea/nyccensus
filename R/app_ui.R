@@ -44,7 +44,8 @@ app_ui <- function(request) {
                         ),
                         hr(),
                         mod_datatable_ui("datatable_data")
-                        )
+                        ),
+               tabPanel("Borough Overview")
                )
   )
 }
