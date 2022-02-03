@@ -26,5 +26,7 @@ A list containing a simple features (sf) data frame for each of the following NY
  - school district (school)
  - state senate district (stateSenate)
  - census tracts (tract_2010 and tract_2020)
+ - New York City (nyc)
+ - Nationwide (us)
 }
 \keyword{datasets}

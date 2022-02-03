@@ -7,10 +7,10 @@
 app_server <- function( input, output, session, global ) {
 
   # Map ----
-  mod_var_server("var_map")
-  mod_geo_server("geo_map")
-  mod_date_server("date_map")
-  mod_map_server("map_map")
+  var_map <- mod_var_server("var_map")
+  geo_map <- mod_geo_server("geo_map")
+  date_map <- mod_date_server("date_map")
+  mod_map_server("map_map", var_map, geo_map, date_map)
 
   # Data Explorer ----
   mod_geo_server("geo_data")

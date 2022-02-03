@@ -19,23 +19,20 @@ mod_map_ui <- function(id){
 #' map Server Functions
 #'
 #' @noRd
-mod_map_server <- function(id){
+mod_map_server <- function(id, var, geo, date){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     # save census data from selected geography
     census_data <- reactive({
-      req(input$geo)
-      rr_data[[input$geo]]
+      rr_data[[geo()]]
     })
 
     # create mapping data frame
     map_df <- reactive({
-      req(input$geo)
-      req(input$date)
-      geo_data[[input$geo]] %>%
+      geo_data[[geo()]] %>%
         left_join(census_data()) %>%
-        filter(RESP_DATE == input$date)
+        filter(RESP_DATE == date())
     })
 
     # set base map
@@ -50,8 +47,8 @@ mod_map_server <- function(id){
 
     # add colors to polygons
     observe({
-      pal <- colorNumeric("viridis", map_df()[[input$var]])
-      var <- map_df()[[input$var]]
+      pal <- colorNumeric("viridis", map_df()[[var()]])
+      var <- map_df()[[var()]]
 
       leaflet::leafletProxy("map", data = map_df()) %>%
         clearShapes() %>%
@@ -79,18 +76,6 @@ mod_map_server <- function(id){
         )
     })
 
-    # print input$map_shape_click info
-    observeEvent(input$map_shape_click, {
-      map_shape_click <- input$map_shape_click
-      print(map_shape_click)
-    })
-
-    # print input$map_click info
-    observeEvent(input$map_click, {
-      map_click <- input$map_click
-      print(map_click)
-    })
-
     # store map_shape_click ID as a reactive value
     clickedShape <- reactiveVal(NA)
 
@@ -111,7 +96,7 @@ mod_map_server <- function(id){
     })
 
     # if user switches geographies, set clickedShape() to NA
-    observeEvent(input$geo, {
+    observeEvent(geo(), {
       clickedShape(NA)
     })
 
