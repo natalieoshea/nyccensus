@@ -30,19 +30,19 @@ mod_map_server <- function(id, var, geo, date){
 
     # create mapping data frame
     map_df <- reactive({
-      geo_data[[geo()]] %>%
+      sf::st_as_sf(geo_data[[geo()]]) %>%
         left_join(census_data()) %>%
         filter(RESP_DATE == date())
     })
 
     # set base map
     output$map <-  leaflet::renderLeaflet({
-      leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
+      leaflet(options = leafletOptions(zoomControl = TRUE)) %>%
         addProviderTiles(
           provider = "CartoDB.Positron",
           options = providerTileOptions(minZoom = 10, maxZoom = 20)
         ) %>%
-        setView(lng = -74.05, lat = 40.71, zoom = 11)
+        setView(lng = -73.95, lat = 40.71, zoom = 11)
     })
 
     # add colors to polygons
