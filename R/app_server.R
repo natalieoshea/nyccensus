@@ -13,9 +13,9 @@ app_server <- function( input, output, session, global ) {
   mod_map_server("map_map", var_map, geo_map, date_map)
 
   # Data Explorer ----
-  mod_geo_server("geo_data")
-  mod_dateRange_server("dateRange_data")
-  mod_boro_server("boro_data")
-  mod_datatable_server("datatable_data")
+  geo_data <- mod_geo_server("geo_data")
+  dateRange_data <- mod_dateRange_server("dateRange_data")
+  boro_data <- mod_boro_server("boro_data")
+  mod_datatable_server("datatable_data", geo_data, dateRange_data, boro_data)
 
 }

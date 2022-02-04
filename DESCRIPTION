@@ -15,6 +15,7 @@ Imports:
     leaflet,
     magrittr,
     processx,
+    sf,
     shiny (>= 1.7.1)
 Encoding: UTF-8
 LazyData: true
