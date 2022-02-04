@@ -86,7 +86,7 @@ nyc_counties <- c("Bronx","Kings","New York","Queens","Richmond")
 acs5_2019 <- load_variables(2019, "acs5", cache = TRUE) %>%
   filter(!str_detect(name, "B16001"))
 acs5_2015 <- load_variables(2015, "acs5", cache = TRUE) %>%
-  filter(str_detect(name, "B16001")) # tract-level detailed language data only available until 2015
+  filter(str_detect(name, "B16001"))
 acs5_vars <- bind_rows(acs5_2015, acs5_2019)
 
 # create vectors of tables names based on how they will be aggregated
@@ -117,10 +117,10 @@ all_tables <- c(sums, means)
 # data download
 
 # run get_acs() on every table name and create a wide data frame
-acs_tract_raw <- map_df(all_tables,
-                        ~ get_acs(geography = "tract", table = ., state = "NY",
-                                  # detailed language data only available at tract level up until 2015
-                                  county = nyc_counties, year = ifelse(. == "B16001", 2015, 2019))) %>%
+acs_tract_raw <- all_tables %>%
+  map_dfr(~ get_acs(geography = "tract", table = ., state = "NY",
+                   # detailed language data only available at tract level up until 2015
+                   county = nyc_counties, year = ifelse(. == "B16001", 2015, 2019))) %>%
   select(-c(NAME, moe)) %>%
   pivot_wider(names_from = variable, values_from = estimate)
 
@@ -163,6 +163,32 @@ acs5_tables <- acs5_vars %>%
          label = str_remove_all(label, "_Household_Income_In_The_Past_12_Months_In_2019_Inflation_Adjusted_Dollars"),
          label = str_remove_all(label, "_Or_Food_Stamps/Snap")) %>%
   select(demo, table, everything())
+
+# calculate totals for all of NYC
+acs_nyc <- acs_tract_raw %>%
+  # take the mean of median variables and sum all others
+  summarize(across(contains(sums), ~sum(.x, na.rm = TRUE)),
+            across(contains(means), ~mean(.x, na.rm = TRUE))) %>%
+  # pivot table
+  pivot_longer(where(is.numeric)) %>%
+  # replace any NaN values with NA
+  mutate(value = ifelse(is.nan(value), NA, value)) %>%
+  # add variable definitions from data dictionary
+  left_join(acs5_tables, by = "name") %>%
+  # group by geography and table
+  group_by(table) %>%
+  # calculate percentage if variable is NOT a median value or 0 (generates NaN values)
+  mutate(percentage = ifelse(table %in% means | is.na(value), NA,
+                             round(value / max(value), digits = 4))) %>%
+  ungroup() %>%
+  # arrange columns in desired order
+  select(table, everything()) %>%
+  # arrange by table column
+  arrange(table) %>%
+  # create nyc column identifier
+  mutate(nyc = "nyc") %>%
+  # arrange columns in order
+  select(nyc, demo, table, name, label, value, percentage, concept)
 
 # function to calculate totals for every geography
 acs_totals <- function(geography) {
@@ -465,6 +491,7 @@ demos_commBoard <- acs_demos("commBoard")
 demos_nCode <- acs_demos("nCode")
 demos_borough <- acs_demos("borough")
 demos_tract_2010 <- acs_demos("tract_2010")
+demos_nyc <- acs_demos("nyc")
 
 # add neighborhood name and boro to nCode dataframe
 demos_nCode <- crosswalk %>%
@@ -475,8 +502,8 @@ demos_nCode <- crosswalk %>%
 
 # merge data into a single list and set names
 demos_data <- list(demos_assembly, demos_borough, demos_commBoard, demos_congressional, demos_council, demos_modzcta,
-                   demos_nCode, demos_school, demos_stateSenate, demos_tract_2010)
+                   demos_nCode, demos_school, demos_stateSenate, demos_tract_2010, demos_nyc)
 names(demos_data) <- c("assembly", "borough", "commBoard", "congressional", "council", "modzcta",
-                       "nCode", "school", "stateSenate", "tract_2010")
+                       "nCode", "school", "stateSenate", "tract_2010", "nyc")
 
 usethis::use_data(demos_data, overwrite = TRUE)

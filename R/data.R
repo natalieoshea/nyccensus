@@ -98,6 +98,7 @@
 #'  - school district (school)
 #'  - state senate district (stateSenate)
 #'  - census tracts (tract_2010)
+#'  - citywide (nyc)
 #'
-#' @format A large list containing 10 elements representing different geographic levels. Each element contains a data frame with 162 demographic variables.
+#' @format A large list containing 11 elements representing different geographic levels. Each element contains a data frame with 162 demographic variables.
 "demos_data"
