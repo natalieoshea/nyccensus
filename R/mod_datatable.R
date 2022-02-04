@@ -23,11 +23,6 @@ mod_datatable_server <- function(id, geo, dateRange, boro){
 
     output$dt <- DT::renderDT({
 
-      # save census data from selected geography
-      census_data <- reactive({
-        rr_data[[geo()]]
-      })
-
       # save crosswalk info
       crosswalk <- crosswalk_tract_2020 %>%
         select(geo(), borough, if(geo() %in% c("nCode", "tract_2020")) "neighborhood") %>%
@@ -46,7 +41,7 @@ mod_datatable_server <- function(id, geo, dateRange, boro){
                          geo() == "modzcta" ~ "Zip Code")
 
       # wrangle datatable info
-      filtered_df <- census_data() %>%
+      filtered_df <- rr_data[[geo()]] %>%
         # filter to selected date range
         filter(RESP_DATE >= min(dateRange()) & RESP_DATE <= max(dateRange())) %>%
         # select relevant columns

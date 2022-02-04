@@ -10,7 +10,7 @@
 mod_boro_ui <- function(id){
   ns <- NS(id)
   tagList(
-    selectInput("boro", "Borough",
+    selectInput(ns("boro"), "Borough",
                 c("All boroughs" = "", c("Bronx","Brooklyn","Manhattan","Queens","Staten Island")),
                 multiple = TRUE)
   )
