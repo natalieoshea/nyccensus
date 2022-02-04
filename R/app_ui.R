@@ -16,6 +16,7 @@ app_ui <- function(request) {
                tabPanel("Map",
                         sidebarLayout(
                           sidebarPanel(
+                            width = 5,
                             h4("Response Rates"),
                             mod_var_ui("var_map"),
                             mod_geo_ui("geo_map"),
@@ -30,6 +31,7 @@ app_ui <- function(request) {
                             )
                           ),
                           mainPanel(
+                            width = 7,
                             mod_map_ui("map_map")
                           ),
                         )

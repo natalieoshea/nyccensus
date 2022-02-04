@@ -5,7 +5,7 @@
 \alias{demos_data}
 \title{American Community Survey Data for NYC Assembly Districts}
 \format{
-A large list containing 10 elements representing different geographic levels. Each element contains a data frame with 162 demographic variables.
+A large list containing 11 elements representing different geographic levels. Each element contains a data frame with 162 demographic variables.
 }
 \usage{
 demos_data
@@ -30,5 +30,6 @@ Data available for the following NYC geographies:
  - school district (school)
  - state senate district (stateSenate)
  - census tracts (tract_2010)
+ - citywide (nyc)
 }
 \keyword{datasets}
