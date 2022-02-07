@@ -32,10 +32,10 @@ app_ui <- function(request) {
                             tabsetPanel(
                               tabPanel("Overview"),
                               tabPanel("Time Series",
-                                       h4("Daily Change in Response Rate", align = "center"),
                                        mod_timeseries_ui("timeseries_ui_1")),
                               tabPanel("Languages"),
-                              tabPanel("Demographics")
+                              tabPanel("Demographics",
+                                       mod_demographics_ui("demographics_ui_1"))
                             )
 
                           )

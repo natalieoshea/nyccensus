@@ -1,0 +1,311 @@
+---
+title: "Test Data Visualizations"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+# Plot theme
+
+```{r}
+theme_census <- function(...) {
+  theme_minimal() +
+    theme(
+      # set default text family, size, and color
+      text = element_text(
+        family = "Open Sans",
+        size = 10,
+        color = "grey20"
+      ),
+      # left align y axis labels
+      axis.text.y = element_text(
+        hjust = 0
+      ),
+      # adjust size and face of axis titles
+      axis.title = element_text(
+        size = 12,
+        face = "italic",
+      ),
+      # add spacing above x axis title
+      axis.title.x = element_text(
+        margin = margin(10, 0, 0, 0)
+      ),
+      # add spacing to right of y axis title
+      axis.title.y = element_text(
+        margin = margin(0, 10, 0, 0)
+      ),
+      # set size and face of plot title
+      plot.title = element_text(
+        size = 14
+      ),
+      # set size of plot subtitle
+      plot.subtitle = element_text(
+        size = 12,
+      ),
+      # set size and justification of caption
+      plot.caption = element_text(
+        size = 8,
+        hjust = 0,
+        margin = margin(10, 0, 0, 0)
+      ),
+      # set size of strip text
+      strip.text = element_text(
+        family = "Open Sans",
+        size = 8.5,
+        color = "grey20"
+      ),
+      # align title, subtitle, and captions with y-axis labels
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      ...
+    )
+}
+```
+
+# Map
+
+```{r overview}
+# save nyc data
+rr_nyc <- rr_data[["nyc"]] %>%
+  select(-c(DRRALL, DRRINT)) %>%
+  rename("nyc_all" = "CRRALL",
+         "nyc_int" = "CRRINT")
+
+# save us data
+rr_us <- rr_data[["us"]] %>%
+  select(-c(DRRALL, DRRINT)) %>%
+  rename("us_all" = "CRRALL",
+         "us_int" = "CRRINT")
+
+# merge data 
+merged_data <- rr_nyc %>%
+  left_join(rr_us, by = "RESP_DATE") %>%
+  mutate(gap = nyc_all - us_all,
+         nyc_form = nyc_all - nyc_int,
+         us_form = us_all - us_int) %>%
+  filter(RESP_DATE == max(RESP_DATE)) %>%
+  pivot_longer(
+    cols = -c(RESP_DATE, gap, nyc_all, us_all),
+    names_to = c("group", "type"),
+    names_sep = "_",
+    values_to = "rate"
+  )
+
+# plot
+ggplot(merged_data, aes(fill=type, y=rate, x=group)) +
+  geom_bar(position="stack", stat="identity") +
+  # geom_text(data = . %>% filter(),
+  #           aes(label = round(Total * 100, digits = 1)),
+  #           position=position_dodge(width=0.9),
+  #           hjust = -.15, color = "grey20", size = 3) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_viridis_d(begin = 0.2, end = 0.6, direction = -1,
+                       guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(title = "Top 5 Foreign Languages Spoken",
+       subtitle = paste0("Across all languages, ",
+                         limited_english,
+                         "% of the population has limited English proficiency")) +
+  theme_census() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank()
+  )
+```
+
+```{r}
+bin_width <- 5
+
+us <- rr_data[["us"]] %>%
+  filter(RESP_DATE == max(RESP_DATE)) %>%
+  pull(CRRALL)
+
+nyc <- rr_data[["nyc"]] %>%
+  filter(RESP_DATE == max(RESP_DATE)) %>%
+  mutate(group = cut(CRRALL, seq(0, 100, by = bin_width), labels = FALSE, include.lowest = TRUE))
+
+histogram_data <- rr_data[["tract_2020"]] %>%
+  filter(RESP_DATE == max(RESP_DATE)) %>%
+  mutate(group = cut(CRRALL, seq(0, 100, by = bin_width), labels = FALSE, include.lowest = TRUE),
+         highlight = if_else(group == nyc$group, "A", "B"))
+
+ggplot(histogram_data, aes(x = CRRALL, alpha = highlight)) +
+  geom_histogram(boundary = 0, binwidth = bin_width,
+                 fill = viridis::viridis(1, begin = 0.2, end = 0.6)) +
+  geom_vline(xintercept = us, color = "grey60", size = 1) +
+  scale_x_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_alpha_manual(values = c(1, 0.7), guide = "none") +
+  labs(title = "Distribution of Response Rates Across NYC Census Tracts") +
+  theme_census() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+```
+
+
+```{r timeseries}
+time_data <- rr_data[["nyc"]] %>%
+  select(RESP_DATE, DRRALL) %>%
+  mutate(RESP_DATE = as.Date(RESP_DATE))
+
+max_date <- time_data %>%
+  filter(DRRALL == max(DRRALL))
+
+ggplot(time_data, aes(x=RESP_DATE, y=DRRALL)) +
+  geom_line(color = viridis::viridis(1, begin = 0.2, end = 0.6)) +
+  geom_point(color = viridis::viridis(1, begin = 0.2, end = 0.6), size = 1) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  labs(title = "2020 Census Daily Response Rate",
+       subtitle = paste0("Max Daily Response Rate: ", max_date$DRRALL, "% (", max_date$RESP_DATE, ")")) +
+  theme_census() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())
+```
+
+```{r demographics}
+# save race from acs data
+demo_data <- nyccensus::demos_data[["nyc"]] %>%
+  select(contains("Race_")) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = c("group", "race", "ethnicity"),
+    names_sep = "_",
+    values_to = "percentage"
+  ) %>%
+  select(-group) %>%
+  mutate(race = recode(race, "MoreThanOne" = "More than One",
+                       "Amerind" = "Native American",
+                       "Pacific" = "Pacific Islander"),
+         ethnicity = recode(ethnicity, "NotHispanic" = "Not Hispanic")) %>%
+  # reverse factors
+  mutate(race = forcats::fct_rev(race),
+         ethnicity = forcats::fct_rev(ethnicity))
+
+# save percent hispanic
+percent_hispanic <- demo_data %>%
+  group_by(ethnicity) %>%
+  summarize(total = sum(percentage)) %>%
+  filter(ethnicity == "Hispanic") %>%
+  mutate(total = round(total * 100, digits = 1)) %>%
+  pull(total)
+
+# calculate totals for bar labels
+race_totals <- demo_data %>% 
+  group_by(race) %>% 
+  summarize(percentage = sum(percentage)) %>%
+  # to make which group to put label over
+  mutate(ethnicity = "Hispanic") %>%
+  arrange(percentage)
+
+ggplot(demo_data, aes(fill=ethnicity, y=percentage, x=factor(race, levels = race_totals$race))) +
+  geom_bar(position="stack", stat="identity") +
+  geom_text(data = race_totals, aes(label = round(percentage * 100, digits = 1)), position=position_dodge(width=0.9),
+            hjust = -.15, color = "grey20", size = 3) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d(begin = 0.2, end = 0.6, direction = -1,
+                       guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(title = "Proportion of Population by Race and Ethnicity",
+       subtitle = paste0("Across all race categories, ", 
+                         percent_hispanic, 
+                         "% of the population identifies as Hispanic/Latinx")) +
+  theme_census() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank()
+  )
+```
+
+```{r languages}
+# save language from acs data
+language_data <- nyccensus::demos_data[["nyc"]] %>%
+  select(contains("Language_")) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = c("group", "language", "type"),
+    names_sep = "_",
+    values_to = "percentage"
+  ) %>%
+  select(-group) %>%
+  mutate(language = recode(language,
+                           "OnlyEnglish" = "Only English",
+                           "LimitedEnglish" = "Limited English",
+                           "FrenchCreole" = "French Creole",
+                           "OtherWestGermanic" = "Other West Germanic",
+                           "SerboCroatian" = "Serbo-Croatian",
+                           "OtherSlavic" = "Other Slavic",
+                           "OtherIndic" = "Other Indic",
+                           "OtherIndoEuropean" = "Other Indo-European",
+                           "OtherPacificIsland" = "Other Pacific Island",
+                           "OtherNativeNorthAmerican" = "Other Native North American",
+                           "AfricanLanguages" = "African Languages",
+                           "OtherAndUnspecifiedLanguages" = "Unspecified"),
+         type = recode(type, "LimitedEnglish" = "Limited English"))
+
+# save limited english population
+limited_english <- language_data %>%
+  filter(language == "Limited English") %>%
+  mutate(percentage = round(percentage * 100, digits = 1)) %>%
+  pull(percentage)
+
+# not in helper
+`%not_in%` <- Negate(`%in%`)
+
+# pull top 5 foreign languages
+top_5_languages <- language_data %>%
+  filter(type == "Total" & language %not_in% c("Only English", "Limited English")) %>%
+  arrange(desc(percentage)) %>%
+  slice(1:5) %>%
+  pull(language)
+
+# plot data frame
+plot_data <- language_data %>%
+  filter(language %in% top_5_languages) %>%
+  pivot_wider(
+    names_from = type,
+    values_from = percentage
+  ) %>%
+  mutate(`English Proficient` = Total - `Limited English`) %>%
+  pivot_longer(
+    cols = -c(language, Total),
+    names_to = "type",
+    values_to = "percentage"
+  ) 
+
+# save language totals
+language_totals <- plot_data %>%
+  filter(type == "English Proficient") %>%
+  mutate(percentage = Total)
+
+# plot
+ggplot(plot_data, aes(fill=type, y=percentage, x=reorder(language, Total))) +
+  geom_bar(position="stack", stat="identity") +
+  geom_text(data = language_totals,
+            aes(label = round(Total * 100, digits = 1)), 
+            position=position_dodge(width=0.9),
+            hjust = -.15, color = "grey20", size = 3) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d(begin = 0.2, end = 0.6, direction = -1,
+                       guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  labs(title = "Top 5 Foreign Languages Spoken",
+       subtitle = paste0("Across all languages, ", 
+                         limited_english, 
+                         "% of the population has limited English proficiency")) +
+  theme_census() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank()
+  )
+```
+
+
