@@ -12,7 +12,7 @@
 mod_map_ui <- function(id){
   ns <- NS(id)
   tagList(
-    leaflet::leafletOutput(ns("map"), height = "90vh")
+    leaflet::leafletOutput(ns("map"), width = "100%", height = "100%")
   )
 }
 
@@ -37,12 +37,16 @@ mod_map_server <- function(id, var, geo, date){
 
     # set base map
     output$map <-  leaflet::renderLeaflet({
-      leaflet(options = leafletOptions(zoomControl = TRUE)) %>%
+      leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
+        # move zoom to upper right
+        htmlwidgets::onRender("function(el, x) {
+        L.control.zoom({ position: 'topright' }).addTo(this)
+        }") %>%
         addProviderTiles(
           provider = "CartoDB.Positron",
           options = providerTileOptions(minZoom = 10, maxZoom = 20)
         ) %>%
-        setView(lng = -73.95, lat = 40.71, zoom = 11)
+        setView(lng = -74.1, lat = 40.7, zoom = 11)
     })
 
     # add colors to polygons

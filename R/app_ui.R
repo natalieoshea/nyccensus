@@ -19,8 +19,8 @@ app_ui <- function(request) {
                           mod_map_ui("map_map"),
                           absolutePanel(
                             id = "controls", class = "panel panel-default",
-                            top = 75, left = 55, width = 500, fixed=TRUE,
-                            draggable = TRUE, height = "auto",
+                            top = 70, left = 20, width = 460, fixed=TRUE,
+                            draggable = FALSE, height = "auto",
 
                             h4("Response Rates"),
                             mod_var_ui("var_map"),
@@ -28,8 +28,6 @@ app_ui <- function(request) {
                             mod_date_ui("date_map"),
 
                             hr(),
-
-                            h3("Sidebar", align = "center"),
 
                             tabsetPanel(
                               tabPanel("Overview"),
