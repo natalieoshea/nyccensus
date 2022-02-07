@@ -25,7 +25,9 @@ app_ui <- function(request) {
                             h4("Sidebar", align = "center"),
                             tabsetPanel(
                               tabPanel("Overview"),
-                              tabPanel("Time Series"),
+                              tabPanel("Time Series",
+                                       h4("Daily Change in Response Rate", align = "center"),
+                                       mod_timeseries_ui("timeseries_ui_1")),
                               tabPanel("Languages"),
                               tabPanel("Demographics")
                             )
