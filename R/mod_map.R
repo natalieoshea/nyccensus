@@ -99,6 +99,10 @@ mod_map_server <- function(id, var, geo, date){
       }
     })
 
+    observeEvent(input$map_shape_click, {
+      print(input$map_shape_click$id)
+    })
+
     # if user switches geographies, set clickedShape() to NA
     observeEvent(geo(), {
       clickedShape(NA)

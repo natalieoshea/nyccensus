@@ -30,10 +30,12 @@ app_ui <- function(request) {
                             hr(),
 
                             tabsetPanel(
-                              tabPanel("Overview"),
+                              tabPanel("Overview",
+                                       mod_overview_ui("overview_ui_1")),
                               tabPanel("Time Series",
                                        mod_timeseries_ui("timeseries_ui_1")),
-                              tabPanel("Languages"),
+                              tabPanel("Languages",
+                                       mod_languages_ui("languages_ui_1")),
                               tabPanel("Demographics",
                                        mod_demographics_ui("demographics_ui_1"))
                             )
@@ -52,7 +54,6 @@ app_ui <- function(request) {
                         hr(),
                         mod_datatable_ui("datatable_data")
                         ),
-               tabPanel("Borough Overview")
                )
   )
 }

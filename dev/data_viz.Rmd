@@ -11,7 +11,7 @@ library(tidyr)
 
 # Plot theme
 
-```{r}
+```{r, include=FALSE}
 theme_census <- function(...) {
   theme_minimal() +
     theme(
@@ -69,57 +69,6 @@ theme_census <- function(...) {
 # Map
 
 ```{r overview}
-# save nyc data
-rr_nyc <- rr_data[["nyc"]] %>%
-  select(-c(DRRALL, DRRINT)) %>%
-  rename("nyc_all" = "CRRALL",
-         "nyc_int" = "CRRINT")
-
-# save us data
-rr_us <- rr_data[["us"]] %>%
-  select(-c(DRRALL, DRRINT)) %>%
-  rename("us_all" = "CRRALL",
-         "us_int" = "CRRINT")
-
-# merge data 
-merged_data <- rr_nyc %>%
-  left_join(rr_us, by = "RESP_DATE") %>%
-  mutate(gap = nyc_all - us_all,
-         nyc_form = nyc_all - nyc_int,
-         us_form = us_all - us_int) %>%
-  filter(RESP_DATE == max(RESP_DATE)) %>%
-  pivot_longer(
-    cols = -c(RESP_DATE, gap, nyc_all, us_all),
-    names_to = c("group", "type"),
-    names_sep = "_",
-    values_to = "rate"
-  )
-
-# plot
-ggplot(merged_data, aes(fill=type, y=rate, x=group)) +
-  geom_bar(position="stack", stat="identity") +
-  # geom_text(data = . %>% filter(),
-  #           aes(label = round(Total * 100, digits = 1)),
-  #           position=position_dodge(width=0.9),
-  #           hjust = -.15, color = "grey20", size = 3) +
-  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
-  scale_fill_viridis_d(begin = 0.2, end = 0.6, direction = -1,
-                       guide = guide_legend(reverse = TRUE)) +
-  coord_flip() +
-  labs(title = "Top 5 Foreign Languages Spoken",
-       subtitle = paste0("Across all languages, ",
-                         limited_english,
-                         "% of the population has limited English proficiency")) +
-  theme_census() +
-  theme(
-    legend.position = "bottom",
-    legend.title = element_blank(),
-    axis.title.y = element_blank(),
-    axis.title.x = element_blank()
-  )
-```
-
-```{r}
 bin_width <- 5
 
 us <- rr_data[["us"]] %>%
@@ -128,20 +77,37 @@ us <- rr_data[["us"]] %>%
 
 nyc <- rr_data[["nyc"]] %>%
   filter(RESP_DATE == max(RESP_DATE)) %>%
-  mutate(group = cut(CRRALL, seq(0, 100, by = bin_width), labels = FALSE, include.lowest = TRUE))
+  mutate(group = cut(CRRALL, seq(0, 100, by = bin_width), labels = FALSE, include.lowest = TRUE),
+         difference = CRRALL - us,
+         type = case_when(
+           difference > 0 ~ "above",
+           difference == 0 ~ "same",
+           difference < 0 ~ "below"
+         ))
 
 histogram_data <- rr_data[["tract_2020"]] %>%
   filter(RESP_DATE == max(RESP_DATE)) %>%
   mutate(group = cut(CRRALL, seq(0, 100, by = bin_width), labels = FALSE, include.lowest = TRUE),
          highlight = if_else(group == nyc$group, "A", "B"))
 
+summary_data <- histogram_data %>%
+  summarize(above = ((sum(CRRALL > nyc$CRRALL, na.rm = T)) / n()) * 100,
+            below = ((sum(CRRALL <= nyc$CRRALL, na.rm = T)) / n()) * 100) %>%
+  mutate(across(everything(), ~round(., digits = 1)))
+
 ggplot(histogram_data, aes(x = CRRALL, alpha = highlight)) +
   geom_histogram(boundary = 0, binwidth = bin_width,
                  fill = viridis::viridis(1, begin = 0.2, end = 0.6)) +
-  geom_vline(xintercept = us, color = "grey60", size = 1) +
+  geom_vline(xintercept = nyc$CRRALL, size = 1,
+             color = "grey80") +
   scale_x_continuous(labels = scales::percent_format(scale = 1)) +
-  scale_alpha_manual(values = c(1, 0.7), guide = "none") +
-  labs(title = "Distribution of Response Rates Across NYC Census Tracts") +
+  scale_alpha_manual(values = c(1, 0.8), guide = "none") +
+  labs(title = paste0(nyc$CRRALL, "% Cumulative Response Rate (", 
+                      if_else(nyc$type != "same",
+                                 paste0(abs(nyc$difference), " points ", nyc$type, " the national)"),
+                                 "Equal to the national)")),
+       subtitle = paste0("Greater than ", summary_data$above, "% of all census tracts in New York City"),
+       caption = paste0("Data as of ", nyc$RESP_DATE)) +
   theme_census() +
   theme(axis.title.x = element_blank(),
         axis.title.y = element_blank())
@@ -161,7 +127,8 @@ ggplot(time_data, aes(x=RESP_DATE, y=DRRALL)) +
   geom_point(color = viridis::viridis(1, begin = 0.2, end = 0.6), size = 1) +
   scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   labs(title = "2020 Census Daily Response Rate",
-       subtitle = paste0("Max Daily Response Rate: ", max_date$DRRALL, "% (", max_date$RESP_DATE, ")")) +
+       subtitle = paste0("Max Daily Response Rate: ", max_date$DRRALL, "% (", max_date$RESP_DATE, ")"),
+       caption = paste0("Data as of ", max(time_data$RESP_DATE))) +
   theme_census() +
   theme(axis.title.x = element_blank(),
         axis.title.y = element_blank())
@@ -213,7 +180,8 @@ ggplot(demo_data, aes(fill=ethnicity, y=percentage, x=factor(race, levels = race
   labs(title = "Proportion of Population by Race and Ethnicity",
        subtitle = paste0("Across all race categories, ", 
                          percent_hispanic, 
-                         "% of the population identifies as Hispanic/Latinx")) +
+                         "% of the population identifies as Hispanic/Latinx"),
+       caption = "Data from the 2014-2018 American Community Survey (ACS) 5-year estimates") +
   theme_census() +
   theme(
     legend.position = "bottom",
@@ -256,7 +224,7 @@ limited_english <- language_data %>%
   pull(percentage)
 
 # not in helper
-`%not_in%` <- Negate(`%in%`)
+# `%not_in%` <- Negate(`%in%`)
 
 # pull top 5 foreign languages
 top_5_languages <- language_data %>%
@@ -298,7 +266,8 @@ ggplot(plot_data, aes(fill=type, y=percentage, x=reorder(language, Total))) +
   labs(title = "Top 5 Foreign Languages Spoken",
        subtitle = paste0("Across all languages, ", 
                          limited_english, 
-                         "% of the population has limited English proficiency")) +
+                         "% of the population has limited English proficiency"),
+       caption = "Data from the 2011-2015 American Community Survey (ACS) 5-year estimates") +
   theme_census() +
   theme(
     legend.position = "bottom",
