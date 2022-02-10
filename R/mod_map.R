@@ -23,16 +23,28 @@ mod_map_server <- function(id, var, geo, date){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # save census data from selected geography
-    census_data <- reactive({
-      rr_data[[geo()]]
-    })
+    observe(print(max(date())))
 
     # create mapping data frame
     map_df <- reactive({
+      # require date to run
+      req(date())
+
+      # save census data from selected geography
+      census_data <- if (var() == "Change Between Dates") {
+        rr_data[[geo()]] %>%
+          filter(RESP_DATE == min(date()) | RESP_DATE == max(date())) %>%
+          group_by(GEO_ID) %>%
+          mutate(CRRALL = max(CRRALL) - min(CRRALL)) %>%
+          ungroup()
+      } else {
+        rr_data[[geo()]] %>%
+          filter(RESP_DATE == date())
+      }
+
+      # merge with geojson file for mapping
       sf::st_as_sf(geo_data[[geo()]]) %>%
-        left_join(census_data()) %>%
-        filter(RESP_DATE == date())
+        left_join(census_data)
     })
 
     # set base map
@@ -51,8 +63,9 @@ mod_map_server <- function(id, var, geo, date){
 
     # add colors to polygons
     observe({
-      pal <- colorNumeric("viridis", map_df()[[var()]])
-      var <- map_df()[[var()]]
+      req(map_df())
+      pal <- colorNumeric("viridis", map_df()[["CRRALL"]])
+      var <- map_df()[["CRRALL"]]
 
       leaflet::leafletProxy("map", data = map_df()) %>%
         clearShapes() %>%

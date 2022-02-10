@@ -10,10 +10,8 @@
 mod_var_ui <- function(id){
   ns <- NS(id)
   tagList(
-    selectInput(ns("var"), "Variable", c("Cumulative Response Rate" = "CRRALL",
-                                         "Cumulative Response Rate (Internet)" = "CRRINT",
-                                         "Daily Response Rate" = "DRRALL",
-                                         "Daily Response Rate (Internet)" = "DRRINT"))
+    selectInput(ns("var"), "Variable", c("Cumulative Response Rate",
+                                         "Change Between Dates"))
   )
 }
 
