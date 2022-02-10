@@ -14,7 +14,7 @@ app_server <- function( input, output, session, global ) {
   mod_overview_server("overview_map")
   mod_timeseries_server("timeseries_map")
   mod_languages_server("languages_map")
-  mod_demographics_server("demographics_map")
+  mod_demographics_server("demographics_map", geo_map)
 
   # Data Explorer ----
   geo_data <- mod_geo_server("geo_data")

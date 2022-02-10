@@ -18,13 +18,45 @@ mod_demographics_ui <- function(id){
 #' demographics Server Functions
 #'
 #' @noRd
-mod_demographics_server <- function(id){
+mod_demographics_server <- function(id, geo){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    # store map_shape_click ID as a reactive value
+    clickedShape <- reactiveVal(NA)
+
+    observeEvent(input$map_click, {
+      if (is.null(input$map_shape_click)) {
+        # if input$map_shape_click hasn't been initiated, set clickedShape() to NA
+        clickedShape(NA)
+      } else if (input$map_click$lat == input$map_shape_click$lat &
+                 input$map_click$lng == input$map_shape_click$lng) {
+        # save polygon value
+        val <- map_df() %>% filter(GEO_ID == input$map_shape_click$id) %>% pull("CRRALL")
+        # if value is NA, set clickedShape() to NA
+        ifelse(is.na(val), clickedShape(NA), clickedShape(input$map_shape_click$id))
+      } else {
+        # if user clicks outside a polygon, set clickedShape() to NA
+        clickedShape(NA)
+      }
+    })
+
+    # if user switches geographies, set clickedShape() to NA
+    observeEvent(geo(), {
+      clickedShape(NA)
+    })
+
     output$demographics <- renderPlot({
-      # save race from acs data
-      demo_data <- nyccensus::demos_data[["nyc"]] %>%
+      # save data for correct geography
+      df <- if (is.na(clickedShape())) {
+        demos_data[["nyc"]]
+      } else {
+        demos_data[[geo()]] %>%
+          filter(GEO_ID %in% clickedShape())
+      }
+
+      # wrangle data
+      demo_data <- df %>%
         select(contains("Race_")) %>%
         pivot_longer(
           cols = everything(),
