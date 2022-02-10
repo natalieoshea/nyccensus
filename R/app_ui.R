@@ -31,13 +31,13 @@ app_ui <- function(request) {
 
                             tabsetPanel(
                               tabPanel("Overview",
-                                       mod_overview_ui("overview_ui_1")),
+                                       mod_overview_ui("overview_map")),
                               tabPanel("Time Series",
-                                       mod_timeseries_ui("timeseries_ui_1")),
+                                       mod_timeseries_ui("timeseries_map")),
                               tabPanel("Languages",
-                                       mod_languages_ui("languages_ui_1")),
+                                       mod_languages_ui("languages_map")),
                               tabPanel("Demographics",
-                                       mod_demographics_ui("demographics_ui_1"))
+                                       mod_demographics_ui("demographics_map"))
                             )
 
                           )
