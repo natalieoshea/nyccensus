@@ -11,7 +11,7 @@
 mod_overview_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("overview"))
+    plotOutput(ns("overview"), height = 350, width = 420)
   )
 }
 
@@ -23,7 +23,7 @@ mod_overview_server <- function(id){
     ns <- session$ns
 
     output$overview <- renderPlot({
-      bin_width <- 5
+      bin_width <- 1
 
       us <- rr_data[["us"]] %>%
         filter(RESP_DATE == max(RESP_DATE)) %>%
@@ -49,11 +49,11 @@ mod_overview_server <- function(id){
                   below = ((sum(CRRALL <= nyc$CRRALL, na.rm = T)) / n()) * 100) %>%
         mutate(across(everything(), ~round(., digits = 1)))
 
-      ggplot2::ggplot(histogram_data, aes(x = CRRALL, alpha = highlight)) +
+      ggplot(histogram_data, aes(x = CRRALL, alpha = highlight)) +
         geom_histogram(boundary = 0, binwidth = bin_width,
                        fill = viridis::viridis(1, begin = 0.2, end = 0.6)) +
-        geom_vline(xintercept = nyc$CRRALL, size = 1,
-                   color = "grey80") +
+        geom_vline(xintercept = us, size = 1,
+                   color = "grey95", linetype = "dotted") +
         scale_x_continuous(labels = scales::percent_format(scale = 1)) +
         scale_alpha_manual(values = c(1, 0.8), guide = "none") +
         labs(title = paste0(nyc$CRRALL, "% Cumulative Response Rate (",
@@ -61,7 +61,7 @@ mod_overview_server <- function(id){
                                     paste0(abs(nyc$difference), " points ", nyc$type, " the national)"),
                                     "Equal to the national)")),
              subtitle = paste0("Greater than ", summary_data$above, "% of all census tracts in New York City"),
-             caption = paste0("Data as of ", nyc$RESP_DATE)) +
+             caption = paste0("Data as of ", nyc$RESP_DATE, "; Dotted line represents national response rate")) +
         theme_census() +
         theme(axis.title.x = element_blank(),
               axis.title.y = element_blank())

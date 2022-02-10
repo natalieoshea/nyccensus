@@ -13,6 +13,7 @@ app_server <- function( input, output, session, global ) {
   mod_map_server("map_map", var_map, geo_map, date_map)
   mod_overview_server("overview_ui_1")
   mod_timeseries_server("timeseries_ui_1")
+  mod_languages_server("languages_ui_1")
   mod_demographics_server("demographics_ui_1")
 
   # Data Explorer ----

@@ -4,7 +4,7 @@ theme_census <- function(...) {
       # set default text family, size, and color
       text = element_text(
         family = "Open Sans",
-        size = 10,
+        size = 9,
         color = "grey20"
       ),
       # left align y axis labels
@@ -13,7 +13,7 @@ theme_census <- function(...) {
       ),
       # adjust size and face of axis titles
       axis.title = element_text(
-        size = 12,
+        size = 10,
         face = "italic",
       ),
       # add spacing above x axis title
@@ -26,11 +26,11 @@ theme_census <- function(...) {
       ),
       # set size and face of plot title
       plot.title = element_text(
-        size = 14
+        size = 12
       ),
       # set size of plot subtitle
       plot.subtitle = element_text(
-        size = 12,
+        size = 10,
       ),
       # set size and justification of caption
       plot.caption = element_text(
@@ -38,6 +38,8 @@ theme_census <- function(...) {
         hjust = 0,
         margin = margin(10, 0, 0, 0)
       ),
+      # add margin around plot
+      plot.margin = margin(10, 10, 10, 10),
       # set size of strip text
       strip.text = element_text(
         family = "Open Sans",

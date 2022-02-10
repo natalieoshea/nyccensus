@@ -11,7 +11,7 @@
 mod_demographics_ui <- function(id){
   ns <- NS(id)
   tagList(
-    plotOutput(ns("demographics"))
+    plotOutput(ns("demographics"), height = 350, width = 420)
   )
 }
 
@@ -64,7 +64,7 @@ mod_demographics_server <- function(id){
         scale_y_continuous(labels = scales::percent) +
         scale_fill_viridis_d(begin = 0.2, end = 0.6, direction = -1,
                              guide = guide_legend(reverse = TRUE)) +
-        coord_flip() +
+        coord_flip(clip = "off") +
         labs(title = "Proportion of Population by Race and Ethnicity",
              subtitle = paste0("Across all race categories, ",
                                percent_hispanic,
