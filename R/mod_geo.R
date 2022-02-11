@@ -30,6 +30,14 @@ mod_geo_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    observeEvent(input$geo, {
+      # update R6 object and trigger
+      ClickedShapeR6$geo <- input$geo
+      demo_data <- demos_data[["nyc"]]
+      ClickedShapeR6$demo_data <- demo_data
+      gargoyle::trigger("update_selection")
+    })
+
     return(
       reactive({
         input$geo

@@ -18,97 +18,67 @@ mod_demographics_ui <- function(id){
 #' demographics Server Functions
 #'
 #' @noRd
-mod_demographics_server <- function(id, geo){
+mod_demographics_server <- function(id, geo, r6){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # store map_shape_click ID as a reactive value
-    clickedShape <- reactiveVal(NA)
+    observeEvent(gargoyle::watch("update_selection"), {
+      output$demographics <- renderPlot({
+        # wrangle data
+        plot_data <- ClickedShapeR6$demo_data %>%
+          select(contains("Race_")) %>%
+          pivot_longer(
+            cols = everything(),
+            names_to = c("group", "race", "ethnicity"),
+            names_sep = "_",
+            values_to = "percentage"
+          ) %>%
+          select(-group) %>%
+          mutate(race = recode(race, "MoreThanOne" = "More than One",
+                               "Amerind" = "Native American",
+                               "Pacific" = "Pacific Islander"),
+                 ethnicity = recode(ethnicity, "NotHispanic" = "Not Hispanic")) %>%
+          # reverse factors
+          mutate(race = forcats::fct_rev(race),
+                 ethnicity = forcats::fct_rev(ethnicity))
 
-    observeEvent(input$map_click, {
-      if (is.null(input$map_shape_click)) {
-        # if input$map_shape_click hasn't been initiated, set clickedShape() to NA
-        clickedShape(NA)
-      } else if (input$map_click$lat == input$map_shape_click$lat &
-                 input$map_click$lng == input$map_shape_click$lng) {
-        # save polygon value
-        val <- map_df() %>% filter(GEO_ID == input$map_shape_click$id) %>% pull("CRRALL")
-        # if value is NA, set clickedShape() to NA
-        ifelse(is.na(val), clickedShape(NA), clickedShape(input$map_shape_click$id))
-      } else {
-        # if user clicks outside a polygon, set clickedShape() to NA
-        clickedShape(NA)
-      }
-    })
+        # save percent hispanic
+        percent_hispanic <- plot_data %>%
+          group_by(ethnicity) %>%
+          summarize(total = sum(percentage)) %>%
+          filter(ethnicity == "Hispanic") %>%
+          mutate(total = round(total * 100, digits = 1)) %>%
+          pull(total)
 
-    # if user switches geographies, set clickedShape() to NA
-    observeEvent(geo(), {
-      clickedShape(NA)
-    })
+        # calculate totals for bar labels
+        race_totals <- plot_data %>%
+          group_by(race) %>%
+          summarize(percentage = sum(percentage)) %>%
+          # to make which group to put label over
+          mutate(ethnicity = "Hispanic") %>%
+          arrange(percentage)
 
-    output$demographics <- renderPlot({
-      # save data for correct geography
-      df <- if (is.na(clickedShape())) {
-        demos_data[["nyc"]]
-      } else {
-        demos_data[[geo()]] %>%
-          filter(GEO_ID %in% clickedShape())
-      }
-
-      # wrangle data
-      demo_data <- df %>%
-        select(contains("Race_")) %>%
-        pivot_longer(
-          cols = everything(),
-          names_to = c("group", "race", "ethnicity"),
-          names_sep = "_",
-          values_to = "percentage"
-        ) %>%
-        select(-group) %>%
-        mutate(race = recode(race, "MoreThanOne" = "More than One",
-                             "Amerind" = "Native American",
-                             "Pacific" = "Pacific Islander"),
-               ethnicity = recode(ethnicity, "NotHispanic" = "Not Hispanic")) %>%
-        # reverse factors
-        mutate(race = forcats::fct_rev(race),
-               ethnicity = forcats::fct_rev(ethnicity))
-
-      # save percent hispanic
-      percent_hispanic <- demo_data %>%
-        group_by(ethnicity) %>%
-        summarize(total = sum(percentage)) %>%
-        filter(ethnicity == "Hispanic") %>%
-        mutate(total = round(total * 100, digits = 1)) %>%
-        pull(total)
-
-      # calculate totals for bar labels
-      race_totals <- demo_data %>%
-        group_by(race) %>%
-        summarize(percentage = sum(percentage)) %>%
-        # to make which group to put label over
-        mutate(ethnicity = "Hispanic") %>%
-        arrange(percentage)
-
-      ggplot(demo_data, aes(fill=ethnicity, y=percentage, x=factor(race, levels = race_totals$race))) +
-        geom_bar(position="stack", stat="identity") +
-        geom_text(data = race_totals, aes(label = round(percentage * 100, digits = 1)), position=position_dodge(width=0.9),
-                  hjust = -.15, color = "grey20", size = 3) +
-        scale_y_continuous(labels = scales::percent) +
-        scale_fill_viridis_d(begin = 0.2, end = 0.6, direction = -1,
-                             guide = guide_legend(reverse = TRUE)) +
-        coord_flip(clip = "off") +
-        labs(title = "Proportion of Population by Race and Ethnicity",
-             subtitle = paste0("Across all race categories, ",
-                               percent_hispanic,
-                               "% of the population identifies as Hispanic/Latinx"),
-             caption = "Data from the 2014-2018 American Community Survey (ACS) 5-year estimates") +
-        theme_census() +
-        theme(
-          legend.position = "bottom",
-          legend.title = element_blank(),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank()
-        )
+        ggplot(plot_data, aes(fill=ethnicity, y=percentage, x=factor(race, levels = race_totals$race))) +
+          geom_bar(position="stack", stat="identity") +
+          geom_text(data = race_totals, aes(label = round(percentage * 100, digits = 1)), position=position_dodge(width=0.9),
+                    hjust = -.15, color = "grey20", size = 3) +
+          scale_y_continuous(labels = scales::percent) +
+          scale_fill_viridis_d(begin = 0.2, end = 0.6, direction = -1,
+                               guide = guide_legend(reverse = TRUE)) +
+          coord_flip(clip = "off") +
+          labs(title = "Proportion of Population by Race and Ethnicity",
+               subtitle = paste0("Across all race categories, ",
+                                 percent_hispanic,
+                                 "% of the population identifies as Hispanic/Latinx"),
+               caption = "Data from the 2014-2018 American Community Survey (ACS) 5-year estimates") +
+          theme_census() +
+          theme(
+            legend.position = "bottom",
+            legend.title = element_blank(),
+            axis.title.y = element_blank(),
+            axis.title.x = element_blank()
+          )
+      })
     })
 
   })
