@@ -58,7 +58,11 @@ mod_demographics_server <- function(id, geo, r6){
           mutate(ethnicity = "Hispanic") %>%
           arrange(percentage)
 
-        ggplot(plot_data, aes(fill=ethnicity, y=percentage, x=factor(race, levels = race_totals$race))) +
+        # save factor levels
+        race_levels <- race_totals$race
+
+        # generate plot
+        ggplot(plot_data, aes(fill=ethnicity, y=percentage, x=factor(race, levels = race_levels))) +
           geom_bar(position="stack", stat="identity") +
           geom_text(data = race_totals, aes(label = round(percentage * 100, digits = 1)), position=position_dodge(width=0.9),
                     hjust = -.15, color = "grey20", size = 3) +
